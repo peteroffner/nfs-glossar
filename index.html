@@ -174,7 +174,7 @@
       content.innerHTML = "";
       const filtered = data.filter(item => {
         const matchesCategory = selectedCategory === "Alle" || item.kategorie === selectedCategory;
-        const matchesSearch = item.name.toLowerCase().includes(search.value.toLowerCase());
+        const matchesSearch = (item.name || "").toLowerCase().includes(search.value.toLowerCase());
         return matchesCategory && matchesSearch;
       });
 
@@ -257,3 +257,4 @@
   </script>
 </body>
 </html>
+

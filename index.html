@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NotSan Glossar</title>
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#c62828" />
+  <link rel="icon" href="icons/icon-192.png" />
+  <style>
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      background-color: #121212;
+      color: #f5f5f5;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background: linear-gradient(90deg, #b71c1c, #1976d2);
+      padding: 1rem;
+      text-align: center;
+      color: white;
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    .toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.5rem 1rem;
+      background-color: #1e1e1e;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      max-width: 400px;
+      padding: 0.5rem;
+      border-radius: 8px;
+      border: none;
+    }
+
+    .category-bar {
+      display: flex;
+      overflow-x: auto;
+      background-color: #1e1e1e;
+      padding: 0.5rem;
+      gap: 0.5rem;
+    }
+
+    .category {
+      flex: 0 0 auto;
+      background-color: #333;
+      color: white;
+      border-radius: 10px;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: 0.2s;
+    }
+
+    .category:hover, .category.active {
+      background-color: #1976d2;
+    }
+
+    .content {
+      padding: 1rem;
+    }
+
+    .entry {
+      background-color: #1e1e1e;
+      margin-bottom: 1rem;
+      padding: 1rem;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    }
+
+    .entry h2 {
+      color: #ff5252;
+      margin-top: 0;
+    }
+
+    button {
+      background-color: #1976d2;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    button:hover {
+      background-color: #1565c0;
+    }
+
+    .editor {
+      background-color: #2a2a2a;
+      padding: 1rem;
+      border-radius: 10px;
+      margin-top: 1rem;
+    }
+
+    .editor input, .editor textarea, .editor select {
+      width: 100%;
+      margin-bottom: 0.5rem;
+      padding: 0.5rem;
+      border-radius: 6px;
+      border: none;
+    }
+
+    footer {
+      text-align: center;
+      padding: 0.5rem;
+      color: #999;
+      font-size: 0.8rem;
+    }
+  </style>
+</head>
+<body>
+  <header>🚑 NotSan Glossar</header>
+
+  <div class="toolbar">
+    <input type="text" id="search" placeholder="Suche nach Krankheitsbild..." />
+    <button id="addEntry">➕ Neuer Eintrag</button>
+    <button id="exportData">💾 Exportieren</button>
+  </div>
+
+  <div class="category-bar" id="categoryBar"></div>
+
+  <div class="content" id="content"></div>
+
+  <footer>Offline nutzbar · NotSan Glossar © 2025</footer>
+
+  <script>
+    let data = [];
+    const content = document.getElementById("content");
+    const search = document.getElementById("search");
+    const categoryBar = document.getElementById("categoryBar");
+
+    const categories = [
+      { name: "Alle", icon: "📋", color: "#777" },
+      { name: "Internistisch", icon: "🫁", color: "#26a69a" },
+      { name: "Trauma", icon: "🩸", color: "#ef5350" },
+      { name: "Neurologie", icon: "🧠", color: "#ab47bc" },
+      { name: "Pädiatrie", icon: "👶", color: "#42a5f5" },
+      { name: "Toxikologie", icon: "☠️", color: "#ffb300" },
+      { name: "Reanimation", icon: "❤️‍🔥", color: "#e53935" }
+    ];
+
+    let selectedCategory = "Alle";
+
+    // Kategorien-Buttons rendern
+    function renderCategories() {
+      categoryBar.innerHTML = "";
+      categories.forEach(cat => {
+        const btn = document.createElement("div");
+        btn.className = "category" + (cat.name === selectedCategory ? " active" : "");
+        btn.innerHTML = `${cat.icon} ${cat.name}`;
+        btn.onclick = () => {
+          selectedCategory = cat.name;
+          renderCategories();
+          renderEntries();
+        };
+        categoryBar.appendChild(btn);
+      });
+    }
+
+    // Einträge rendern
+    function renderEntries() {
+      content.innerHTML = "";
+      const filtered = data.filter(item => {
+        const matchesCategory = selectedCategory === "Alle" || item.kategorie === selectedCategory;
+        const matchesSearch = item.name.toLowerCase().includes(search.value.toLowerCase());
+        return matchesCategory && matchesSearch;
+      });
+
+      filtered.forEach((item, index) => {
+        const div = document.createElement("div");
+        div.className = "entry";
+        div.innerHTML = `
+          <h2>${item.name}</h2>
+          <p><b>🩺 Symptome:</b> ${item.symptome}</p>
+          <p><b>🧬 Pathophysiologie:</b> ${item.pathophysiologie}</p>
+          <p><b>🧾 Differenzialdiagnosen:</b> ${item.differenzialdiagnosen}</p>
+          <p><b>💊 Behandlung:</b> ${item.behandlung}</p>
+          <button onclick="editEntry(${index})">✏️ Bearbeiten</button>
+        `;
+        content.appendChild(div);
+      });
+    }
+
+    // Editor öffnen
+    function editEntry(index = null) {
+      const item = index !== null ? data[index] : {
+        name: "", symptome: "", pathophysiologie: "", differenzialdiagnosen: "", behandlung: "", kategorie: "Internistisch"
+      };
+      content.innerHTML = `
+        <div class="editor">
+          <input id="eName" placeholder="Krankheitsbild" value="${item.name}">
+          <select id="eKategorie">${categories.slice(1).map(c => `<option ${c.name === item.kategorie ? "selected" : ""}>${c.name}</option>`).join("")}</select>
+          <textarea id="eSymptome" placeholder="Symptome">${item.symptome}</textarea>
+          <textarea id="ePatho" placeholder="Pathophysiologie">${item.pathophysiologie}</textarea>
+          <textarea id="eDiff" placeholder="Differenzialdiagnosen">${item.differenzialdiagnosen}</textarea>
+          <textarea id="eBeh" placeholder="Behandlung">${item.behandlung}</textarea>
+          <button id="saveBtn">💾 Speichern</button>
+          <button onclick="renderEntries()">❌ Abbrechen</button>
+        </div>`;
+      document.getElementById("saveBtn").onclick = () => {
+        const newItem = {
+          name: eName.value,
+          kategorie: eKategorie.value,
+          symptome: eSymptome.value,
+          pathophysiologie: ePatho.value,
+          differenzialdiagnosen: eDiff.value,
+          behandlung: eBeh.value
+        };
+        if (index !== null) data[index] = newItem; else data.push(newItem);
+        localStorage.setItem("notsanGlossar", JSON.stringify(data));
+        renderCategories();
+        renderEntries();
+      };
+    }
+
+    // Daten exportieren
+    document.getElementById("exportData").onclick = () => {
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "krankheitsbilder.json";
+      a.click();
+    };
+
+    // Neuer Eintrag
+    document.getElementById("addEntry").onclick = () => editEntry();
+
+    // Suche
+    search.oninput = renderEntries;
+
+    // JSON laden
+    fetch("krankheitsbilder.json")
+      .then(res => res.json())
+      .then(json => {
+        data = JSON.parse(localStorage.getItem("notsanGlossar")) || json;
+        renderCategories();
+        renderEntries();
+      });
+
+    // Service Worker
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("service-worker.js");
+    }
+  </script>
+</body>
+</html>

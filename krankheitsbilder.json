@@ -1,0 +1,32 @@
+[
+  {
+    "titel": "Asthma bronchiale",
+    "kategorie": "Internistisch",
+    "symptome": ["Atemnot", "Giemen, Pfeifen", "Zyanose", "Angst"],
+    "pathophysiologie": "Chronisch-entzündliche Atemwegserkrankung mit reversibler Obstruktion durch Bronchospasmus, Schleimhautödem und Sekret.",
+    "differenzialdiagnosen": ["COPD-Exazerbation", "Fremdkörperaspiration", "Herzinsuffizienz"],
+    "diagnostik": ["SpO₂, AF", "Auskultation (Giemen)", "Peak-Flow (wenn möglich)"],
+    "behandlung": ["Beruhigen, Oberkörper hochlagern", "O₂ bei Hypoxie", "β2-Sympathomimetikum inhalativ (z. B. Salbutamol)", "Kortikosteroid systemisch/medikamentös", "Monitoring; bei Erschöpfung Intubationsbereitschaft"],
+    "merksatz": "Patient zuerst beruhigen – Atmung folgt dem Kopf."
+  },
+  {
+    "titel": "Myokardinfarkt (STEMI/NSTEMI)",
+    "kategorie": "Internistisch",
+    "symptome": ["Brustschmerz (drückend, stechend)", "Ausstrahlung in Arm/Jaw/Schulter", "Übelkeit", "kalter Schweiß", "Synkope"],
+    "pathophysiologie": "Akuter Myokardinfarkt durch koronaren Verschluss/Thrombus → Ischämie und Nekrose von Herzmuskelgewebe.",
+    "differenzialdiagnosen": ["Lungenembolie", "Aortendissektion", "Gastroösophageale Reflux-Erkrankung"],
+    "diagnostik": ["12-Kanal-EKG", "Vitalparameter, SpO₂", "Anamnese", "Labor (Troponin im Krankenhaus)"],
+    "behandlung": ["Sauerstoff nur bei Hypoxie (SpO₂ < 94%)", "Aspirin (wenn kein Kontraindikationen)", "Nitroglycerin (wenn nicht hypotensiv)", "Analgesie bei Bedarf", "Schnelltransport in PCI-Zentrum"],
+    "merksatz": "Time is muscle."
+  },
+  {
+    "titel": "Polytrauma",
+    "kategorie": "Traumatologisch",
+    "symptome": ["Mehrere schwere Verletzungen", "Bewusstseinsstörung", "Anzeichen von Schock", "freie Luft im Thorax (bei Spannungspneumothorax)"],
+    "pathophysiologie": "Mehrfache Verletzungen mehrerer Körperregionen mit Gefahr für die Vitalfunktionen.",
+    "differenzialdiagnosen": ["Isoliertes Monotrauma mit Schock", "Verletzungen ohne lebensbedrohliche Begleitverletzung"],
+    "diagnostik": ["ABCDE-Schema", "FAST/Extended-FAST", "Monitoring", "Blutdruck", "SpO₂"],
+    "behandlung": ["CABCDE bzw. ALS-konforme Erstversorgung", "Blutstillung/Packung", "Immobilisation (selbstlimitierend)", "O₂, Volumenersatz bei Blutung", "Schnelltransport Traumazentrum"],
+    "merksatz": "Life before limb."
+  }
+]
